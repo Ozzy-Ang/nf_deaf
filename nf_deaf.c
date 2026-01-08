@@ -285,11 +285,11 @@ nf_deaf_xmit4(const struct sk_buff *oskb, const struct iphdr *oiph,
 	if (unlikely(!skb))
 		return -ENOMEM;
 
-	corrupt_checksum = oskb->mark & MARK_WR_CHKSUM;
-	corrupt_seq = oskb->mark & MARK_WR_SEQ;
-	corrupt_ackseq = oskb->mark & MARK_WR_ACKSEQ;
-	ttl = FIELD_GET(MARK_TTL, oskb->mark);
-	repeat = FIELD_GET(MARK_REPEAT, oskb->mark);
+	corrupt_checksum = 0x10000;//oskb->mark & MARK_WR_CHKSUM;
+	corrupt_seq = 0x0;//oskb->mark & MARK_WR_SEQ;
+	corrupt_ackseq = 0x0;//oskb->mark & MARK_WR_ACKSEQ;
+	ttl = 0x3;//FIELD_GET(MARK_TTL, oskb->mark);
+	repeat = 0x0;//FIELD_GET(MARK_REPEAT, oskb->mark);
 	skb->protocol = htons(ETH_P_IP);
 	IPCB(skb)->iif = IPCB(oskb)->iif;
 	IPCB(skb)->flags = IPCB(oskb)->flags;
@@ -329,11 +329,11 @@ nf_deaf_xmit6(const struct sk_buff *oskb, const struct ipv6hdr *oip6h,
 	if (unlikely(!skb))
 		return -ENOMEM;
 
-	corrupt_checksum = oskb->mark & MARK_WR_CHKSUM;
-	corrupt_seq = oskb->mark & MARK_WR_SEQ;
-	corrupt_ackseq = oskb->mark & MARK_WR_ACKSEQ;
-	ttl = FIELD_GET(MARK_TTL, oskb->mark);
-	repeat = FIELD_GET(MARK_REPEAT, oskb->mark);
+	corrupt_checksum = 0x10000;//oskb->mark & MARK_WR_CHKSUM;
+	corrupt_seq = 0x0;//oskb->mark & MARK_WR_SEQ;
+	corrupt_ackseq = 0x0;//oskb->mark & MARK_WR_ACKSEQ;
+	ttl = 0x3;//FIELD_GET(MARK_TTL, oskb->mark);
+	repeat = 0x0;//FIELD_GET(MARK_REPEAT, oskb->mark);
 	skb->protocol = htons(ETH_P_IPV6);
 	IP6CB(skb)->iif = IP6CB(oskb)->iif;
 	IP6CB(skb)->flags = IP6CB(oskb)->flags;
@@ -381,7 +381,7 @@ nf_deaf_postrouting_hook4(void *priv, struct sk_buff *skb,
 	if (unlikely(nf_deaf_xmit4(skb, iph, th, state)))
 		return NF_DROP;
 
-	delay = FIELD_GET(MARK_DELAY, skb->mark);
+	delay = 0x1;//FIELD_GET(MARK_DELAY, skb->mark);
 	if (unlikely(!delay))
 		return NF_ACCEPT;
 
@@ -412,7 +412,7 @@ nf_deaf_postrouting_hook6(void *priv, struct sk_buff *skb,
 	if (unlikely(nf_deaf_xmit6(skb, ip6h, th, state)))
 		return NF_DROP;
 
-	delay = FIELD_GET(MARK_DELAY, skb->mark);
+	delay = 0x1;//FIELD_GET(MARK_DELAY, skb->mark);
 	if (unlikely(!delay))
 		return NF_ACCEPT;
 
